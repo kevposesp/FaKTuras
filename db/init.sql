@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS Fakturas;
+
+CREATE DATABASE IF NOT EXISTS Fakturas;
+
+USE Fakturas;
