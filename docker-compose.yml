@@ -2,7 +2,7 @@ version: '3'
 services:
   mysqldb:
     image: mysql:5.7
-    container_name: mysqldb
+    container_name: mysqldb_fakturas
     ports:
       - "3307:3306"
     environment:
@@ -18,6 +18,18 @@ services:
     working_dir: /app
     volumes:
       - ./server:/app
+    command: sh -c "sleep 10 && npm run dev"
+    depends_on:
+      - mysqldb
+
+  nuxtapp:
+    image: node:20
+    container_name: client_fakturas
+    ports:
+      - "4000:4000"
+    working_dir: /app_client
+    volumes:
+      - ./client:/app_client
     command: npm run dev
     depends_on:
       - mysqldb
