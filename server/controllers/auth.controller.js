@@ -102,7 +102,13 @@ const infoUser = asyncHandler((req, res) => {
                 return res.status(403).send({ message: "err_usr_en" })
             }
             res.status(200).send({
-                username: user.username,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    tel: user.tel,
+                    name: user.nombre,
+                    status: user.status
+                },
                 message: "inf_ok"
             });
         })

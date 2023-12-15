@@ -7,16 +7,16 @@ const dummies = require("./dummies/")
 
 db.sequelize.sync(
   {
-    force: true
+    // force: true
   }
 ).then(() => {
-  console.log('Drop and Resync Db');
-  dummies.createClient()
+  // console.log('Drop and Resync Db');
+  // dummies.createClient()
 })
 
 
 var corsOptions = {
-  origin: "http://localhost:8080"
+  origin: "http://localhost:4000"
 };
 
 app.use(cors(corsOptions));
