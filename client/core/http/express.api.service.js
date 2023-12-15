@@ -1,32 +1,45 @@
 import axios from "axios";
-import coreConfig from "../config"
+import coreConfig from "../config";
 
 export const httpClient = axios.create({
     baseURL: coreConfig.EXPRESS_URL
-})
+});
 
-// if (localStorage.getItem("jwt")) {
-//     httpClient.defaults.headers.common['x-access-token'] = localStorage.getItem("jwt");
-// }
+const setToken = () => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem("jwt")) {
+        httpClient.defaults.headers.common['x-access-token'] = localStorage.getItem("jwt");
+    }
+};
 
 const expressApiService = {
-
     get(path) {
+        setToken();
         return httpClient.get(path)
-            .catch((error) => { throw new Error(error) })
+            .catch((error) => {
+                throw error;
+            });
     },
     post(path, body) {
+        setToken();
         return httpClient.post(path, body)
-            .catch((error) => { throw new Error(error) })
+            .catch((error) => {
+                throw error;
+            });
     },
     put(path, body) {
+        setToken();
         return httpClient.put(path, body)
-            .catch((error) => { throw new Error(error) })
+            .catch((error) => {
+                throw error;
+            });
     },
     delete(path) {
+        setToken();
         return httpClient.delete(path)
-            .catch((error) => { throw new Error(error) })
+            .catch((error) => {
+                throw error;
+            });
     }
-}
+};
 
-export default expressApiService
+export default expressApiService;

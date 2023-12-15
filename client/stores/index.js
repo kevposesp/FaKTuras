@@ -13,17 +13,25 @@ export const useUserStore = defineStore('users', {
                 const response = await expressApiService.post('/auth/signin', payload)
                 localStorage.setItem('jwt', response.data.accessToken)
                 localStorage.setItem('rjwt', response.data.refreshToken)
+                await this.getInfoMyUser()
+                return true
             } catch (error) {
-                console.error(error);
+                return error.response
             }
         },
-        async getUser() {
+        async getInfoMyUser() {
             try {
                 const response = await expressApiService.post('/auth/info', {});
                 this._user = response.data.user;
+                return true
             } catch (error) {
-                console.error('Error fetching tables:', error);
+                return error.response
             }
-        }
+        },
+        logout() {
+            delete localStorage.jwt;
+            delete localStorage.rjwt;
+            this._user = {};
+        },
     }
 });
