@@ -1,13 +1,10 @@
 <template>
     <div class="invoices">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-3">
-            <div
-                class="grid grid-cols-4 px-4 py-5 text-sm text-gray-700 border-b border-gray-200 gap-x-16 dark:border-gray-700">
-                <div>
-                    <a href="#"
-                        class="text-white block w-full bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-green-900">Nueva
-                        factura</a>
-                </div>
+            <div class="max-w-sm px-4 py-5 text-sm text-gray-700 border-b border-gray-200 gap-x-16 dark:border-gray-700">
+                <a @click="createInvoice()"
+                    class="text-white block w-full bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-green-900">Nueva
+                    factura</a>
             </div>
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -39,7 +36,7 @@
                             {{ inv.totalAmount }} €
                         </td>
                         <td class="px-6 py-4">
-                            <NuxtLink :to="'/invoices/' + inv.id"
+                            <NuxtLink :to="'/invoices/' + inv.id + '/edit'"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</NuxtLink>
                         </td>
                     </tr>
@@ -58,7 +55,8 @@
                     </li>
                     <li v-for="(pag, index) in invoicesData.totalPages" :key="index">
                         <a @click="filters.currentPage = pag; changePage()"
-                            :class="pag == filters.currentPage ? 'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'">{{ pag }}</a>
+                            :class="pag == filters.currentPage ? 'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'">{{
+                                pag }}</a>
                     </li>
                     <li>
                         <a @click="filters.currentPage === invoicesData.totalPages ? '' : filters.currentPage++; changePage()"
@@ -72,10 +70,12 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 definePageMeta({ middleware: 'auth' })
 
+const router = useRouter()
 const store = useInvoiceStore()
-store.getInvoices({page: 1, pageSize: 10})
+store.getInvoices({ page: 1, pageSize: 10 })
 const invoicesData = computed(() => store.invoices)
 
 const filters = reactive({
@@ -90,9 +90,15 @@ const formFilters = () => {
     }
 }
 
-
 const changePage = () => {
     store.getInvoices(formFilters())
+}
+
+const createInvoice = async () => {
+    const res = await store.createInvoice()
+    if (res.status == 'OK') {
+        router.push('invoices/' + res.id + '/edit')
+    }
 }
 
 </script>

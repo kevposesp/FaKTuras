@@ -30,7 +30,7 @@ const getUserInvoices = asyncHandler(async (req, res) => {
                 'number_invoice',
                 'date_invoice',
                 'formatted_date',
-                [db.sequelize.literal('(SELECT COALESCE(SUM(price), 0) FROM invoices_lines WHERE invoices_lines.fk_invoice = invoices.id)'), 'totalAmount']
+                [db.sequelize.literal('(SELECT COALESCE(SUM(price), 0) FROM invoices_lines WHERE invoices_lines.invoices_lines = invoices.id)'), 'totalAmount']
             ],
             include: [
                 { model: InvoiceLine, attributes: [] }
@@ -56,10 +56,57 @@ const getUserInvoices = asyncHandler(async (req, res) => {
     }
 });
 
+const getInvoice = asyncHandler(async (req, res) => {
+    try {
+        const invoice = await Invoice.findOne({
+            where: { id: req.params.id },
+            include: [{ model: InvoiceLine, as: "invoices_lines" }]
+        });
+
+        if (!invoice) {
+            return res.status(404).json({ success: false, error: "Invoice not found" });
+        }
+
+        const totalAmount = await InvoiceLine.sum('price', {
+            where: { invoices_lines: req.params.id }
+        });
+
+        const invoiceWithTotalAmount = {
+            ...invoice.toJSON(),
+            totalAmount
+        };
+
+        res.status(200).json({ success: true, invoice: invoiceWithTotalAmount });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+const createLineInvoice = asyncHandler(async (req, res) => {
+    try {
+        const { id, description, job, price } = req.body
+        const invoiceLine = await InvoiceLine.create({
+            id,
+            description,
+            job,
+            price,
+            invoices_lines: req.params.id
+        })
+        
+        res.status(201).json({
+            success: true,
+            invoiceLine
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+})
 
 const invoiceController = {
     createInvoice,
-    getUserInvoices
+    getUserInvoices,
+    getInvoice,
+    createLineInvoice
 }
 
 module.exports = invoiceController
