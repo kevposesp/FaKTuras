@@ -5,7 +5,8 @@
                 class="grid grid-cols-4 px-4 py-5 text-sm text-gray-700 border-b border-gray-200 gap-x-16 dark:border-gray-700">
                 <div>
                     <a href="#"
-                        class="text-white block w-full bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-green-900">Nueva factura</a>
+                        class="text-white block w-full bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-green-900">Nueva
+                        factura</a>
                 </div>
             </div>
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -18,74 +19,81 @@
                             Fecha
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Price
+                            Precio
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Action
+                            Acciones
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                        v-for="(index, inv) in 10" :key="index">
+                        v-for="(inv, index) in invoicesData.data" :key="index">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ inv + 1 }}
+                            {{ inv.number_invoice }}
                         </th>
                         <td class="px-6 py-4">
-                            10 / 10 / 23
+                            {{ inv.formatted_date }}
                         </td>
                         <td class="px-6 py-4">
-                            $2999
+                            {{ inv.totalAmount }} €
                         </td>
                         <td class="px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <NuxtLink :to="'/invoices/' + inv.id"
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</NuxtLink>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <!-- <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
                 aria-label="Table navigation">
                 <span
                     class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of <span
-                        class="font-semibold text-gray-900 dark:text-white">1000</span></span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ filters.sizePage }}</span> of <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ invoicesData.totalCount }}</span></span>
                 <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                     <li>
-                        <a href="#"
+                        <a @click="filters.currentPage > 1 ? filters.currentPage-- : ''; changePage()"
                             class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
                     </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                    <li v-for="(pag, index) in invoicesData.totalPages" :key="index">
+                        <a @click="filters.currentPage = pag; changePage()"
+                            :class="pag == filters.currentPage ? 'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'">{{ pag }}</a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                    </li>
-                    <li>
-                        <a href="#" aria-current="page"
-                            class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-                    </li>
-                    <li>
-                        <a href="#"
+                        <a @click="filters.currentPage === invoicesData.totalPages ? '' : filters.currentPage++; changePage()"
                             class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
                     </li>
                 </ul>
-            </nav> -->
+            </nav>
         </div>
     </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 definePageMeta({ middleware: 'auth' })
+
+const store = useInvoiceStore()
+store.getInvoices({page: 1, pageSize: 10})
+const invoicesData = computed(() => store.invoices)
+
+const filters = reactive({
+    currentPage: 1,
+    sizePage: 10
+})
+
+const formFilters = () => {
+    return {
+        page: filters.currentPage,
+        pageSize: filters.sizePage
+    }
+}
+
+
+const changePage = () => {
+    store.getInvoices(formFilters())
+}
 
 </script>
 
