@@ -2,19 +2,45 @@
   <div class="edit">
     <div
       class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-      <div class="">
-        <div class="mb-5 max-w-sm">
-          <label for="n_inv" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numero de
-            factura</label>
-          <input type="text" id="n_inv"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="343" v-model="invoice.number_invoice" required>
+      <div class="flex justify-between">
+        <div>
+          <div class="mb-5 max-w-sm">
+            <label for="n_inv" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numero de
+              factura</label>
+            <p v-if="invoiceEdit.number_invoice == 0">{{ invoice.number_invoice }}</p>
+            <input type="text" id="n_inv" v-if="invoiceEdit.number_invoice != 0"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="343" v-model="invoiceEdit.number_invoice" required>
+          </div>
+          <div class="mb-5 max-w-sm">
+            <label for="date_inv" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
+            <p v-if="invoiceEdit.number_invoice == 0">{{ invoice.formatted_date }}</p>
+            <input type="text" id="date_inv" v-if="invoiceEdit.number_invoice != 0"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="10/10/2023" v-model="invoiceEdit.formatted_date" required>
+          </div>
         </div>
-        <div class="mb-5 max-w-sm">
-          <label for="date_inv" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
-          <input type="text" id="date_inv"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="10/10/2023" v-model="invoice.formatted_date" required>
+        <div class="">
+          <div class="flex">
+            <button type="button" @click="editInvoice()" v-if="invoiceEdit.number_invoice == 0"
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 20 18">
+                <path
+                  d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
+                <path
+                  d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
+              </svg>
+            </button>
+            <button type="button" @click="updateInvoice()" v-if="invoiceEdit.number_invoice != 0"
+              class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm p-2 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 16 18">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
       <div class="lines">
@@ -165,6 +191,16 @@ const lineEdit = reactive({
   price: ''
 })
 
+const invoiceEdit = reactive({
+  number_invoice: 0,
+  formatted_date: ''
+})
+
+const editInvoice = () => {
+  invoiceEdit.number_invoice = invoice.value.number_invoice
+  invoiceEdit.formatted_date = invoice.value.formatted_date
+}
+
 const editLine = (line) => {
   lineEdit.id = line.id
   lineEdit.description = line.description
@@ -189,8 +225,20 @@ const formLine = (r) => {
   }
 }
 
+const formInvoice = (i) => {
+  return {
+    number_invoice: i.number_invoice,
+    formatted_date: i.formatted_date,
+    id_invoice: id.value
+  }
+}
+
 const createLine = async () => {
   const res = await store.createLineInvoice(formLine(newLine))
+}
+
+const updateInvoice = async () => {
+  const res = await store.updateInvoice(formInvoice(invoiceEdit))
 }
 
 </script>

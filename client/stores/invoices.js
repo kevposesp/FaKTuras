@@ -47,6 +47,16 @@ export const useInvoiceStore = defineStore('invoices', {
             } catch (error) {
                 return error.response
             }
+        },
+        async updateInvoice(payload) {
+            try {
+                const response = await expressApiService.put('/invoice/' + payload.id_invoice + '/update', payload)
+                this._invoice.number_invoice = response.data.data.number_invoice
+                this._invoice.formatted_date = response.data.data.formatted_date
+                return true
+            } catch (error) {
+                return error.response                
+            }
         }
     }
 });

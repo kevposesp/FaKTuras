@@ -21,8 +21,17 @@ module.exports = (sequelize, Sequelize) => {
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
-                    timeZone: "Europe/Madrid" 
+                    timeZone: "Europe/Madrid"
                 });
+            },
+            set(value) {
+                // Parsear la fecha y establecerla en date_invoice
+                console.log(value);
+                const parsedDate = new Date(value);
+                console.log(parsedDate);
+                if (!isNaN(parsedDate.getTime())) {
+                    this.setDataValue('date_invoice', parsedDate);
+                }
             }
         }
     }, {
@@ -45,6 +54,16 @@ module.exports = (sequelize, Sequelize) => {
                 // Asignar el nuevo número de factura y la fecha actual
                 invoice.number_invoice = newInvoiceNumber;
                 invoice.date_invoice = new Date();
+            },
+            beforeUpdate: async (invoice, options) => {
+                // Actualizar date_invoice si formatted_date ha cambiado
+                if (invoice.changed('formatted_date')) {
+                    const parsedDate = new Date(invoice.formatted_date);
+                    console.log(parsedDate);
+                    if (!isNaN(parsedDate.getTime())) {
+                        invoice.date_invoice = parsedDate;
+                    }
+                }
             }
         }
     });

@@ -1,4 +1,4 @@
-const { createInvoice, getUserInvoices, getInvoice, createLineInvoice } = require("../controllers/invoice.controller");
+const { createInvoice, getUserInvoices, getInvoice, createLineInvoice, updateInvoice } = require("../controllers/invoice.controller");
 const { verifyToken } = require("../middleware/authJwt");
 
 module.exports = function (app) {
@@ -17,7 +17,7 @@ module.exports = function (app) {
         ],
         getUserInvoices
     )
-    
+
     app.get(
         "/invoice/:id",
         [
@@ -33,13 +33,21 @@ module.exports = function (app) {
         ],
         createInvoice
     )
-    
+
     app.post(
         "/invoice/:id/line/create",
         [
             verifyToken
         ],
         createLineInvoice
+    )
+
+    app.put(
+        "/invoice/:id/update",
+        [
+            verifyToken
+        ],
+        updateInvoice
     )
 
 };

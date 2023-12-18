@@ -1,6 +1,7 @@
 const db = require("../models");
 const Invoice = db.invoice
 const InvoiceLine = db.invoiceLine
+const { parse } = require('date-fns');
 
 const asyncHandler = require("express-async-handler");
 
@@ -24,13 +25,14 @@ const getUserInvoices = asyncHandler(async (req, res) => {
 
         const userInvoices = await Invoice.findAll({
             where: { ownerId: req.userId },
-            order: [['date_invoice', 'DESC']],
+            order: [['createdAt', 'DESC'], ['date_invoice', 'DESC']],
             attributes: [
                 'id',
                 'number_invoice',
                 'date_invoice',
                 'formatted_date',
-                [db.sequelize.literal('(SELECT COALESCE(SUM(price), 0) FROM invoices_lines WHERE invoices_lines.invoices_lines = invoices.id)'), 'totalAmount']
+                [db.sequelize.literal('(SELECT COALESCE(SUM(price), 0) FROM invoices_lines WHERE invoices_lines.invoices_lines = invoices.id)'), 'totalAmount'],
+                'createdAt'
             ],
             include: [
                 { model: InvoiceLine, attributes: [] }
@@ -92,7 +94,7 @@ const createLineInvoice = asyncHandler(async (req, res) => {
             price,
             invoices_lines: req.params.id
         })
-        
+
         res.status(201).json({
             success: true,
             invoiceLine
@@ -102,11 +104,28 @@ const createLineInvoice = asyncHandler(async (req, res) => {
     }
 })
 
+const updateInvoice = asyncHandler(async (req, res) => {
+    let invoice = await Invoice.findByPk(req.params.id);
+    if (!invoice) {
+        return res.status(404).json({ success: false, error: "Invoice not found." });
+    } else {
+
+        req.body.formatted_date = parse(req.body.formatted_date, 'dd/MM/yyyy', new Date());
+
+        invoice = await invoice.update(req.body);
+
+        invoice = await invoice.save();
+
+        res.json({ success: true, data: invoice });
+    }
+});
+
 const invoiceController = {
     createInvoice,
     getUserInvoices,
     getInvoice,
-    createLineInvoice
+    createLineInvoice,
+    updateInvoice
 }
 
 module.exports = invoiceController
