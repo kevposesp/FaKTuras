@@ -74,8 +74,8 @@
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 v-for="(line, index) in invoice.invoices_lines" :key="index">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  <p v-if="line.id != lineEdit.id">{{ line.id }}</p>
-                  <input type="text" v-model="lineEdit.id" v-if="line.id === lineEdit.id"
+                  <p v-if="line.id != lineEdit.id">{{ line.accident_number }}</p>
+                  <input type="text" v-model="lineEdit.accident_number" v-if="line.id === lineEdit.id"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="00000000" required>
                 </th>
@@ -108,7 +108,7 @@
                         d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
                     </svg>
                   </button>
-                  <button type="button" v-if="line.id === lineEdit.id"
+                  <button type="button" @click="updateLine()" v-if="line.id === lineEdit.id"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm p-2 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
@@ -116,13 +116,14 @@
                         d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
                     </svg>
                   </button>
+                  <DeleteModal :title="'Delete Line'" :id="line.id" :accident_number="line.accident_number" @deleteEmit="deleteLine($event)"/>
                 </td>
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" v-if="lineEdit.id == ''">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   <input type="text"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="00000000" v-model="newLine.id" required>
+                    placeholder="00000000" v-model="newLine.accident_number" required>
                 </th>
                 <td class="px-6 py-4">
                   <input type="text"
@@ -186,6 +187,7 @@ const invoice = computed(() => store.invoice)
 
 const lineEdit = reactive({
   id: '',
+  accident_number: '',
   description: '',
   job: '',
   price: ''
@@ -203,6 +205,7 @@ const editInvoice = () => {
 
 const editLine = (line) => {
   lineEdit.id = line.id
+  lineEdit.accident_number = line.accident_number
   lineEdit.description = line.description
   lineEdit.job = line.job
   lineEdit.price = line.price
@@ -210,6 +213,7 @@ const editLine = (line) => {
 
 const newLine = reactive({
   id: '',
+  accident_number: '',
   description: '',
   job: '',
   price: ''
@@ -218,6 +222,7 @@ const newLine = reactive({
 const formLine = (r) => {
   return {
     id: r.id,
+    accident_number: r.accident_number,
     description: r.description,
     job: r.job,
     price: parseFloat(r.price).toFixed(2),
@@ -235,10 +240,36 @@ const formInvoice = (i) => {
 
 const createLine = async () => {
   const res = await store.createLineInvoice(formLine(newLine))
+  if (res == true) {
+    newLine.id = ''
+    newLine.accident_number = ''
+    newLine.description = ''
+    newLine.job = ''
+    newLine.price = ''
+  }
 }
 
 const updateInvoice = async () => {
   const res = await store.updateInvoice(formInvoice(invoiceEdit))
+  if (res == true) {
+    invoiceEdit.number_invoice = 0
+    invoiceEdit.formatted_date = ''
+  }
+}
+
+const updateLine = async () => {
+  const res = await store.updateLineInvoice(formLine(lineEdit))
+  if (res == true) {
+    lineEdit.id = ''
+    lineEdit.accident_number = ''
+    lineEdit.description = ''
+    lineEdit.job = ''
+    lineEdit.price = ''
+  }
+}
+
+const deleteLine = async (id_line) => {
+  const res = await store.deleteLineInvoice({id: id_line, id_invoice: id})
 }
 
 </script>
