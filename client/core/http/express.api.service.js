@@ -8,6 +8,8 @@ export const httpClient = axios.create({
 const setToken = () => {
     if (typeof localStorage !== 'undefined' && localStorage.getItem("jwt")) {
         httpClient.defaults.headers.common['x-access-token'] = localStorage.getItem("jwt");
+    } else {
+        httpClient.defaults.headers.common['x-access-token'] = '';
     }
 };
 

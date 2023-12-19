@@ -75,7 +75,7 @@ const getInvoice = asyncHandler(async (req, res) => {
 
         const invoiceWithTotalAmount = {
             ...invoice.toJSON(),
-            totalAmount
+            totalAmount: totalAmount ? totalAmount : 0
         };
 
         res.status(200).json({ success: true, invoice: invoiceWithTotalAmount });

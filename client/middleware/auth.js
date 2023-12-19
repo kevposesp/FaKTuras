@@ -2,14 +2,15 @@
 
 import expressApiService from "~/core/http/express.api.service"
 
-export default defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
         const response = await expressApiService.post('/auth/info', {})
-        if (response.status !== 200) {
-            return '/auth'
+        if (!response) {
+            return navigateTo('/auth')
         }
     } catch (error) {
-        return '/auth'
+        if (error.response && error.response.status !== 200) {
+            return navigateTo('/auth')
+        }
     }
-    
 })

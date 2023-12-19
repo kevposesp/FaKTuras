@@ -24,7 +24,8 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    '@sidebase/nuxt-pdf'
   ],
   pinia: {
     storesDirs: ['./stores/**', './stores/**'],

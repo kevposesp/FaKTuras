@@ -40,6 +40,18 @@
                   d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
               </svg>
             </button>
+            <NuxtLink :to="'/invoices/' + id + '/view'">
+              <button type="button"
+                class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm p-2 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                  fill="none" viewBox="0 0 20 14">
+                  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                    <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z" />
+                  </g>
+                </svg>
+              </button>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -116,7 +128,8 @@
                         d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
                     </svg>
                   </button>
-                  <DeleteModal :title="'Delete Line'" :id="line.id" :accident_number="line.accident_number" @deleteEmit="deleteLine($event)"/>
+                  <DeleteModal :title="'Delete Line'" :id="line.id" :accident_number="line.accident_number"
+                    @deleteEmit="deleteLine($event)" />
                 </td>
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" v-if="lineEdit.id == ''">
@@ -179,6 +192,8 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
+definePageMeta({ middleware: 'auth' })
+
 const route = useRoute()
 const store = useInvoiceStore()
 const id = computed(() => route.params.id)
@@ -269,7 +284,7 @@ const updateLine = async () => {
 }
 
 const deleteLine = async (id_line) => {
-  const res = await store.deleteLineInvoice({id: id_line, id_invoice: id})
+  const res = await store.deleteLineInvoice({ id: id_line, id_invoice: id })
 }
 
 </script>
