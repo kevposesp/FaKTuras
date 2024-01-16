@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV4
         },
-        nombre: {
+        name: {
             type: Sequelize.STRING
         },
         tel: {

@@ -35,7 +35,7 @@
                         <td class="px-6 py-4">
                             {{ inv.totalAmount }} €
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 flex">
                             <NuxtLink :to="'/invoices/' + inv.id + '/edit'">
                                 <button type="button"
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -48,6 +48,22 @@
                                     </svg>
                                 </button>
                             </NuxtLink>
+                            <NuxtLink :to="'/invoices/' + inv.id + '/view'">
+                                <button type="button"
+                                    class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm p-2 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
+                                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2">
+                                            <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                            <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z" />
+                                        </g>
+                                    </svg>
+                                </button>
+                            </NuxtLink>
+                            <DeleteModal :title="'Delete Invoice'" :id="inv.id" :accident_number="inv.number_invoice"
+                                :message="'Quieres eliminar la factura? Se eliminaran todas las lineas.'"
+                                @deleteEmit="deleteInvoice($event)" />
                         </td>
                     </tr>
                 </tbody>
@@ -75,6 +91,7 @@
                 </ul>
             </nav>
         </div>
+        <Loader v-if="!loaded"/>
     </div>
 </template>
 
@@ -87,6 +104,7 @@ const router = useRouter()
 const store = useInvoiceStore()
 store.getInvoices({ page: 1, pageSize: 10 })
 const invoicesData = computed(() => store.invoices)
+const loaded = ref(true)
 
 const filters = reactive({
     currentPage: 1,
@@ -109,6 +127,12 @@ const createInvoice = async () => {
     if (res.status == 'OK') {
         router.push('invoices/' + res.id + '/edit')
     }
+}
+
+const deleteInvoice = async (id) => {
+    loaded.value = false
+    const res = await store.deleteInvoice(id)
+    loaded.value = true
 }
 
 </script>

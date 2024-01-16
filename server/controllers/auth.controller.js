@@ -106,7 +106,7 @@ const infoUser = asyncHandler((req, res) => {
                     id: user.id,
                     username: user.username,
                     tel: user.tel,
-                    name: user.nombre,
+                    name: user.name,
                     status: user.status
                 },
                 message: "inf_ok"

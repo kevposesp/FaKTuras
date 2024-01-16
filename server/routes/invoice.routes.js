@@ -5,9 +5,11 @@ const {
     createLineInvoice,
     updateInvoice,
     updateLineInvoice,
-    deleteLineInvoice
+    deleteLineInvoice,
+    deleteInvoice
 } = require("../controllers/invoice.controller");
 const { verifyToken } = require("../middleware/authJwt");
+const { ownerInvoice } = require("../middleware/invoice");
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -29,7 +31,8 @@ module.exports = function (app) {
     app.get(
         "/invoice/:id",
         [
-            verifyToken
+            verifyToken,
+            ownerInvoice
         ],
         getInvoice
     )
@@ -45,7 +48,8 @@ module.exports = function (app) {
     app.post(
         "/invoice/:id/line/create",
         [
-            verifyToken
+            verifyToken,
+            ownerInvoice
         ],
         createLineInvoice
     )
@@ -53,7 +57,8 @@ module.exports = function (app) {
     app.put(
         "/invoice/:id/line/update",
         [
-            verifyToken
+            verifyToken,
+            ownerInvoice
         ],
         updateLineInvoice
     )
@@ -61,7 +66,8 @@ module.exports = function (app) {
     app.put(
         "/invoice/:id/update",
         [
-            verifyToken
+            verifyToken,
+            ownerInvoice
         ],
         updateInvoice
     )
@@ -69,9 +75,19 @@ module.exports = function (app) {
     app.delete(
         "/invoice/:id/line/:lineId/delete",
         [
-            verifyToken
+            verifyToken,
+            ownerInvoice
         ],
         deleteLineInvoice
+    )
+    
+    app.delete(
+        "/invoice/:id",
+        [
+            verifyToken,
+            ownerInvoice
+        ],
+        deleteInvoice
     )
 
 };

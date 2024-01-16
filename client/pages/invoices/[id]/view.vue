@@ -11,7 +11,7 @@
             <div class="grid grid-cols-4 w-full text-left mb-8 text-xs">
                 <div class="border-b flex col-span-4">
                     <div class="w-1/4 text-gray-700 font-bold uppercase py-2">Nº Siniestro</div>
-                    <div class="w-1/4 text-gray-700 font-bold uppercase py-2">Descripción</div>
+                    <div class="w-1/4 text-gray-700 font-bold uppercase py-2">Nombre</div>
                     <div class="w-1/4 text-gray-700 font-bold uppercase py-2">Trabajo</div>
                     <div class="w-1/4 text-gray-700 font-bold uppercase py-2">Precio</div>
                 </div>
@@ -19,7 +19,7 @@
 
                 <div v-for="(line, index) in invoice.invoices_lines" :key="index" class="border-b flex col-span-4">
                     <div class="w-1/4" :class="p ? 'py-1' : 'pb-3'">{{ line.accident_number }}</div>
-                    <div class="w-1/4" :class="p ? 'py-1' : 'pb-3'">{{ line.description }}</div>
+                    <div class="w-1/4" :class="p ? 'py-1' : 'pb-3'">{{ line.name }}</div>
                     <div class="w-1/4" :class="p ? 'py-1' : 'pb-3'">{{ line.job }}</div>
                     <div class="w-1/4" :class="p ? 'py-1' : 'pb-3'">{{ line.price }} €</div>
                 </div>
@@ -27,10 +27,10 @@
                 <div class="border-b col-span-4 flex items-center" :class="p ? 'py-1' : 'pb-3'">
                     <div class="w-1/4"></div>
                     <div class="w-1/4"></div>
-                    <div class="w-1/4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-left">
+                    <div class="w-1/4 font-medium font-black text-gray-900 whitespace-nowrap dark:text-white text-left">
                         Total bruto
                     </div>
-                    <div class="w-1/4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <div class="w-1/4 font-medium font-black text-gray-900 whitespace-nowrap dark:text-white">
                         {{ invoice.totalAmount }} €
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     Volver a editar
                 </button>
             </NuxtLink>
-            <button @click="p = false;
+            <button @click="p = false; loaded = false;
             exportToPDF(invoice.number_invoice + '-' + invoice.formatted_date + '.pdf', pdfSection, { orientation: 'p' }, { html2canvas: { scale: 0.7, useCORS: true }, margin: [50, 0, 50, 15], autoPaging: 'text', width: 600, windowWidth: 600 });
             generatePdf()" type="button"
                 class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -57,7 +57,7 @@
                 </svg>
             </button>
         </div>
-
+        <Loader v-if="!loaded"/>
     </div>
 </template>
 
@@ -77,9 +77,12 @@ const id = computed(() => route.params.id)
 store.getInvoice(id.value)
 const invoice = computed(() => store.invoice)
 
+const loaded = ref(true)
+
 const generatePdf = async () => {
     setTimeout(() => {
         p.value = true
+        loaded.value = true
     }, 1500);
 }
 

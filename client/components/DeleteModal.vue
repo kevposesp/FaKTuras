@@ -30,7 +30,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Quieres eliminar esta linea?
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{{ message }}
                         </h3>
                         <p class="mb-5">{{ accident_number }}</p>
                         <hr>
@@ -52,9 +52,10 @@ import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
 
 const props = defineProps({
-    title: { type: String },
-    id: { type: String },
-    accident_number: { type: String }
+    title: {},
+    id: {},
+    accident_number: {},
+    message: {}
 })
 
 const emit = defineEmits(['deleteEmit'])

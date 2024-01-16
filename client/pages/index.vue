@@ -1,11 +1,15 @@
 <template>
   <div class="app">
-    <h1>Hola</h1>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+
 definePageMeta({ middleware: 'auth' })
+const router = useRouter()
+
+router.push({ path: '/invoices' })
 
 </script>
 

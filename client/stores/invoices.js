@@ -83,6 +83,16 @@ export const useInvoiceStore = defineStore('invoices', {
             } catch (error) {
                 return error.response
             }
+        },
+        async deleteInvoice(payload) {
+            try {
+                const response = await expressApiService.delete('/invoice/' + payload)
+                let index = this._invoices.data.findIndex((item) => item.id == payload)
+                this._invoices.data.splice(index, 1)
+                return true
+            } catch (error) {
+                return error.response
+            }
         }
     }
 });

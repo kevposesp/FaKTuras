@@ -86,10 +86,10 @@ const getInvoice = asyncHandler(async (req, res) => {
 
 const createLineInvoice = asyncHandler(async (req, res) => {
     try {
-        const { accident_number, description, job, price } = req.body
+        const { accident_number, name, job, price } = req.body
         const invoiceLine = await InvoiceLine.create({
             accident_number,
-            description,
+            name,
             job,
             price,
             invoices_lines: req.params.id
@@ -139,6 +139,14 @@ const deleteLineInvoice = asyncHandler(async (req, res) => {
     res.json({ success: true, message: "Deleted Successfully" })
 })
 
+const deleteInvoice = asyncHandler(async (req, res) => {
+    const invoice = await Invoice.destroy({ where: { id: req.params.id } });
+    if (!invoice) {
+        return res.status(404).json({ success: false, error: "Invoice Not Found" });
+    }
+    res.json({ success: true, message: "The invoice has been deleted successfully" });
+});
+
 const invoiceController = {
     createInvoice,
     getUserInvoices,
@@ -146,7 +154,8 @@ const invoiceController = {
     createLineInvoice,
     updateLineInvoice,
     updateInvoice,
-    deleteLineInvoice
+    deleteLineInvoice,
+    deleteInvoice
 }
 
 module.exports = invoiceController

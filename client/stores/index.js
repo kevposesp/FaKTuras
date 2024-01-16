@@ -28,10 +28,15 @@ export const useUserStore = defineStore('users', {
                 return error.response
             }
         },
-        logout() {
-            delete localStorage.jwt;
-            delete localStorage.rjwt;
-            this._user = {};
+        async logout() {
+            try {
+                delete localStorage.jwt;
+                delete localStorage.rjwt;
+                this._user = {};
+                return true
+            } catch (error) {
+                return error.response
+            }
         },
     }
 });

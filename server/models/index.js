@@ -39,7 +39,7 @@ db.invoice.belongsTo(db.user, { as: "owner", foreignKey: "ownerId" });
 db.user.hasMany(db.invoice, { as: "ownedInvoices", foreignKey: "ownerId" });
 
 // Invoice and LineInvoice association
-db.invoice.hasMany(db.invoiceLine, {foreignKey:'invoices_lines'})
-db.invoiceLine.belongsTo(db.invoice,{foreignKey:"invoices_lines"})
+db.invoice.hasMany(db.invoiceLine, { foreignKey: 'invoices_lines', onDelete: 'CASCADE' })
+db.invoiceLine.belongsTo(db.invoice, { foreignKey: "invoices_lines", onDelete: 'CASCADE' })
 
 module.exports = db;

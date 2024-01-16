@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
         accident_number: {
             type: Sequelize.STRING
         },
-        description: {
+        name: {
             type: Sequelize.STRING
         },
         job: {
