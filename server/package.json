@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "",
-    "dev": "node --env-file=config/.env --watch server.js"
+    "dev": "node --trace-deprecation --env-file=config/.env --watch server.js"
   },
   "author": "kevposesp",
   "license": "ISC",

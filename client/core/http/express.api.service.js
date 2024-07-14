@@ -11,6 +11,7 @@ const setToken = () => {
     } else {
         httpClient.defaults.headers.common['x-access-token'] = '';
     }
+    localStorage.getItem("jwt")
 };
 
 const expressApiService = {

@@ -7,11 +7,10 @@ const dummies = require("./dummies")
 
 db.sequelize.sync(
   {
-    // force: true
+    force: process.env.FORCE_DB_SYNC === 'true'
   }
 ).then(() => {
-  // console.log('Drop and Resync Db');
-  // dummies.createClient()
+  process.env.ACTIVE_DUMMIES === 'true' ? dummies.createClient() : null
 })
 
 

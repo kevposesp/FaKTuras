@@ -1,5 +1,5 @@
 module.exports = {
-    secret: "secret-key",
-    jwtExpiration: 3600,
-    jwtRefreshExpiration: 86400
+    secret: process.env.SECRET || "secret-key",
+    jwtExpiration: process.env.EXPIRATION || 3600,
+    jwtRefreshExpiration: process.env.REFRESH_EXPIRATION || 86400
 };

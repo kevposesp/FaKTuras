@@ -33,7 +33,7 @@ const signin = asyncHandler(async (req, res) => {
             }
 
             var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: config.jwtExpiration
+                expiresIn: parseInt(config.jwtExpiration)
             });
 
             let refreshToken = await RefreshToken.createToken(user);
@@ -76,7 +76,7 @@ const refreshToken = asyncHandler(async (req, res) => {
 
         const user = await refreshToken.getUser();
         let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: config.jwtExpiration,
+            expiresIn: parseInt(config.jwtExpiration),
         });
 
         return res.status(200).json({
