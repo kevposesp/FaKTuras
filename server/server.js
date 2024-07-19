@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+require('dotenv').config({ path: 'config/.env' });
 const db = require("./models");
 const dummies = require("./dummies")
 
@@ -15,7 +15,7 @@ db.sequelize.sync(
 
 
 var corsOptions = {
-  origin: "http://localhost:4000"
+  origin: process.env.CORSURL || "http://localhost:4000"
 };
 
 app.use(cors(corsOptions));
@@ -32,6 +32,6 @@ require('./routes/invoice.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
-app.listen(PORT, () => {
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`Server is running on port ${PORT}.`);
 });

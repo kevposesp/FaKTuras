@@ -12,7 +12,7 @@ module.exports = function (app) {
     });
 
     app.post(
-        "/auth/signin",
+        "/api/auth/signin",
         [
             enableLog
         ],
@@ -20,7 +20,7 @@ module.exports = function (app) {
     );
 
     app.post(
-        "/auth/info",
+        "/api/auth/info",
         [
             verifyToken
         ],
@@ -28,7 +28,7 @@ module.exports = function (app) {
     );
 
     app.post(
-        "/auth/refreshtoken",
+        "/api/auth/refreshtoken",
         [
             verifyToken
         ],

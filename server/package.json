@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node --trace-deprecation --env-file=config/.env --watch server.js"
+    "dev": "node --trace-deprecation --env-file=config/.env --watch server.js",
+    "start": "pm2 start server.js --name fakturas --update-env",
+    "restart": "pm2 restart fakturas --update-env"
   },
   "author": "kevposesp",
   "license": "ISC",
@@ -12,6 +14,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "date-fns": "^3.0.0",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.0",

@@ -1,4 +1,4 @@
 const coreConfig = {
-    EXPRESS_URL: 'http://localhost:3000',
+    EXPRESS_URL: 'https://fakturas.kevinposada.es/api/',
 }
 export default coreConfig

@@ -21,7 +21,7 @@ module.exports = function (app) {
     });
 
     app.get(
-        "/invoice/list",
+        "/api/invoice/list",
         [
             verifyToken
         ],
@@ -29,7 +29,7 @@ module.exports = function (app) {
     )
 
     app.get(
-        "/invoice/:id",
+        "/api/invoice/:id",
         [
             verifyToken,
             ownerInvoice
@@ -38,7 +38,7 @@ module.exports = function (app) {
     )
 
     app.post(
-        "/invoice/create",
+        "/api/invoice/create",
         [
             verifyToken
         ],
@@ -46,7 +46,7 @@ module.exports = function (app) {
     )
 
     app.post(
-        "/invoice/:id/line/create",
+        "/api/invoice/:id/line/create",
         [
             verifyToken,
             ownerInvoice
@@ -55,7 +55,7 @@ module.exports = function (app) {
     )
 
     app.put(
-        "/invoice/:id/line/update",
+        "/api/invoice/:id/line/update",
         [
             verifyToken,
             ownerInvoice
@@ -64,7 +64,7 @@ module.exports = function (app) {
     )
 
     app.put(
-        "/invoice/:id/update",
+        "/api/invoice/:id/update",
         [
             verifyToken,
             ownerInvoice
@@ -73,7 +73,7 @@ module.exports = function (app) {
     )
 
     app.delete(
-        "/invoice/:id/line/:lineId/delete",
+        "/api/invoice/:id/line/:lineId/delete",
         [
             verifyToken,
             ownerInvoice
@@ -82,7 +82,7 @@ module.exports = function (app) {
     )
     
     app.delete(
-        "/invoice/:id",
+        "/api/invoice/:id",
         [
             verifyToken,
             ownerInvoice
